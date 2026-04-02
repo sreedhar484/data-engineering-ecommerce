@@ -16,7 +16,7 @@ def is_pipeline_running():
 
 
 def lambda_handler(event, context):
-    print("Lambda triggered")
+    print("Lambda triggered!")
     print(event)
     file_keys = []
 
