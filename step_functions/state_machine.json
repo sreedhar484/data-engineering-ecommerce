@@ -1,0 +1,57 @@
+{
+  "Comment": "Batch Pipeline",
+  "StartAt": "DetectChanges",
+  "States": {
+    "DetectChanges": {
+      "Type": "Pass",
+      "ResultPath": "$.flags",
+      "Result": {
+        "run_customers": true,
+        "run_products": true,
+        "run_orders": true,
+        "run_order_items": true
+      },
+      "Next": "CustomersJob"
+    },
+    "CustomersJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "customers_scd1_pipeline"
+      },
+      "Next": "ProductsJob"
+    },
+    "ProductsJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "products_pipeline"
+      },
+      "Next": "OrdersJob"
+    },
+    "OrdersJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "orders_pipeline"
+      },
+      "Next": "OrderItemsJob"
+    },
+    "OrderItemsJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "order_items_pipeline"
+      },
+      "Next": "GoldJob"
+    },
+    "GoldJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "order_fact_table"
+      },
+      "End": true
+    }
+  }
+}
