@@ -31,6 +31,7 @@ jobs:
 
             aws glue update-job --job-name $job_name \
               --job-update "{
+              \"Role\": \"glue-customer-pipeline-role\",
                 \"Command\": {
                   \"Name\": \"glueetl\",
                   \"ScriptLocation\": \"s3://learning-data-engineering-7799/glue_scripts/$script_name\"
